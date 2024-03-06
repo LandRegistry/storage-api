@@ -1,0 +1,121 @@
+swagger: '2.0'
+
+info:
+  version: "0.0.1"
+  title: Storage API
+
+paths:
+  /v1.0/storage/{bucket}:
+    post:
+      summary: Upload a file to be stored in the given bucket
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: path
+          name: bucket
+          type: string
+          required: true
+          description: The catagory of the file (e.g. LLC1, LONS, etc..).
+        - in: formData
+          name: file
+          type: file
+          description: The file to be stored.
+      produces:
+        - application/json
+      responses:
+        201:
+          description: File stored
+          schema:
+            type: object
+            properties:
+              bucket:
+                type: string
+              file_id:
+                type: string
+                description: file id to retrive the file
+        400:
+          description: Malformed request
+        500:
+          description: Application error
+      security:
+        - JWTAuth: []
+
+  /v1.0/storage/{bucket}/{fileId}:
+    get:
+      summary:
+        Retrieves a file by bucket and file id.
+      parameters:
+        - in: path
+          name: bucket
+          type: string
+          required: true
+          description: The catagory of the file (e.g. LLC1, LONS, etc..).
+        - in: path
+          name: fileId
+          type: string
+          required: true
+      responses:
+        200:
+          description: File found and returned
+        404:
+          description: File not found
+
+        500:
+          description: Application error
+    delete:
+      summary:
+        Deletes a file by bucket and file id.
+      parameters:
+        - in: path
+          name: bucket
+          type: string
+          required: true
+          description: The catagory of the file (e.g. LLC1, LONS, etc..).
+        - in: path
+          name: fileId
+          type: string
+          required: true
+      responses:
+        204:
+          description: Delete successful
+        404:
+          description: File not found
+        500:
+          description: Application error
+      security:
+        - JWTAuth: []
+
+  /v1.0/storage/{bucket}/{fileId}/external-url:
+    get:
+      summary:
+        Retrieves the external url to access an object by bucket and file id.
+      parameters:
+        - in: path
+          name: bucket
+          type: string
+          required: true
+          description: The catagory of the file (e.g. LLC1, LONS, etc..).
+        - in: path
+          name: fileId
+          type: string
+          required: true
+      responses:
+        200:
+          description: File found and link returned
+          schema:
+            type: object
+            properties:
+              external_reference:
+                type: string
+        404:
+          description: File not found
+
+        500:
+          description: Application error
+
+securityDefinitions:
+  JWTAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+

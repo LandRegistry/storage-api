@@ -1,0 +1,11 @@
+Flask==2.3.3
+Flask-LogConfig==0.4.2
+Flask-Script==2.0.6
+requests==2.31.0
+pyclamd==0.4.0
+git+http://internal-git-host/llc-beta/jwt-validation.git@v1.2.3
+boto3==1.28.44
+botocore==1.31.44
+gunicorn==21.2.0
+eventlet==0.33.3
+werkzeug==2.3.7

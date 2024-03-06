@@ -1,0 +1,23 @@
+version: '2'
+services:
+  storage-api:
+    container_name: storage-api
+    build:
+      context: ./storage-api
+      # To allow a matching user to the user running the dev env to be created for running the container
+      args:
+        - OUTSIDE_UID=${OUTSIDE_UID}
+        - OUTSIDE_GID=${OUTSIDE_GID}
+    restart: on-failure
+    ports:
+      - "9008:8080"
+    volumes:
+      - ./storage-api:/src:delegated
+    logging:
+      driver: syslog
+      options:
+        syslog-format: "rfc5424"
+        syslog-address: "tcp://localhost:25826"
+        tag: "{{.Name}}"
+    depends_on:
+      - logstash
